@@ -33,14 +33,13 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
     # Set profiles_sample_rate to 1.0 to profile 100% of sampled transactions.
     # We recommend adjusting this value in production.
-    profiles_sample_rate=1.0,
+    
     integrations=[FlaskIntegration()],
     send_default_pii=True,
 )
 
 # instantiate the app using sentry for debugging
 app = Flask(__name__)
-
 # # turn on debugging if in development mode
 # app.debug = True if os.getenv("FLASK_ENV", "development") == "development" else False
 
