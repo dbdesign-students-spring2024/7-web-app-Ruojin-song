@@ -17,26 +17,26 @@ from sentry_sdk.integrations.flask import (
 import pymongo
 from pymongo.errors import ConnectionFailure
 from bson.objectid import ObjectId
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 # load credentials and configuration options from .env file
 # if you do not yet have a file named .env, make one based on the template in env.example
-load_dotenv(override=True)  # take environment variables from .env.
+#load_dotenv(override=True)  # take environment variables from .env.
 
 # initialize Sentry for help debugging... this requires an account on sentrio.io
 # you will need to set the SENTRY_DSN environment variable to the value provided by Sentry
 # delete this if not using sentry.io
-sentry_sdk.init(
-    dsn=os.getenv("SENTRY_DSN"),
+#sentry_sdk.init(
+     #dsn=os.getenv("SENTRY_DSN"),
     # enable_tracing=True,
     # Set traces_sample_rate to 1.0 to capture 100% of transactions for performance monitoring.
-    traces_sample_rate=1.0,
+     #traces_sample_rate=1.0,
     # Set profiles_sample_rate to 1.0 to profile 100% of sampled transactions.
     # We recommend adjusting this value in production.
     
-    integrations=[FlaskIntegration()],
-    send_default_pii=True,
-)
+     #integrations=[FlaskIntegration()],
+     #send_default_pii=True,
+#)
 
 # instantiate the app using sentry for debugging
 app = Flask(__name__)
@@ -45,17 +45,21 @@ app = Flask(__name__)
 
 # try to connect to the database, and quit if it doesn't work
 try:
-    cxn = pymongo.MongoClient(os.getenv("MONGO_URI"))
-    db = cxn[os.getenv("MONGO_DBNAME")]  # store a reference to the selected database
+    cxn=pymongo.MongoClient('class-mongodb.cims.nyu.edu', 27017, 
+                                username='rs8050',
+                                password='XiVBZLDs',
+                                authSource='rs8050')
+    #cxn = pymongo.MongoClient(os.getenv("MONGO_URI"))
+    db = cxn['rs8050']  # store a reference to the selected database
 
     # verify the connection works by pinging the database
-    cxn.admin.command("ping")  # The ping command is cheap and does not require auth.
+    #cxn.admin.command("ping")  # The ping command is cheap and does not require auth.
     print(" * Connected to MongoDB!")  # if we get here, the connection worked!
 except ConnectionFailure as e:
     # catch any database errors
     # the ping command failed, so the connection is not available.
     print(" * MongoDB connection error:", e)  # debug
-    sentry_sdk.capture_exception(e)  # send the error to sentry.io. delete if not using
+     #sentry_sdk.capture_exception(e)  # send the error to sentry.io. delete if not using
     sys.exit(1)  # this is a catastrophic error, so no reason to continue to live
 
 
@@ -199,4 +203,4 @@ def handle_error(e):
 # run the app
 if __name__ == "__main__":
     # logging.basicConfig(filename="./flask_error.log", level=logging.DEBUG)
-    app.run(load_dotenv=True)
+    app.run()
