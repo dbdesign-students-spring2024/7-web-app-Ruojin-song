@@ -4,6 +4,7 @@ import os
 import sys
 import subprocess
 import datetime
+import re
 
 from flask import Flask, render_template, request, redirect, url_for, make_response
 
@@ -86,6 +87,28 @@ def read():
     )  # sort in descending order of created_at timestamp
     return render_template("read.html", docs=docs)  # render the read template
 
+@app.route("/search")
+def search():
+    """
+    Route for GET requests to the create page.
+    Displays a form users can fill out to create a new document.
+    """
+    return render_template("search.html")  # render the search template
+
+@app.route("/search", methods=["POST"])
+def search_post():
+    """
+    Route for POST requests to search for products by type.
+    Accepts the form submission data for a product type and retrieves all products with the same type from the database.
+    """
+    product_type = request.form["product_type"]
+
+    # Convert product_type to case-insensitive regular expression pattern
+    regex_pattern = re.compile(f"^{re.escape(product_type)}$", re.IGNORECASE)
+
+    # Query database for products with the same type (case-insensitive)
+    docs = db.exampleapp.find({"type": {"$regex": regex_pattern}})
+    return render_template("search_read.html", docs=docs, product_type=product_type)
 
 @app.route("/create")
 def create():
@@ -102,11 +125,21 @@ def create_post():
     Route for POST requests to the create page.
     Accepts the form submission data for a new document and saves the document to the database.
     """
-    name = request.form["fname"]
-    message = request.form["fmessage"]
+    product_type = request.form["product_type"]
+    description = request.form["product_description"]
+    price = request.form["product_price"]
+    id = request.form["user_id"]
+    email = request.form['user_email']
 
-    # create a new document with the data the user entered
-    doc = {"name": name, "message": message, "created_at": datetime.datetime.utcnow()}
+    # Create a new document with the data the user entered
+    doc = {
+        "type": product_type,
+        "description": description,
+        "price": price,
+        "id": id,
+        "email": email,
+        "created_at": datetime.datetime.utcnow(),
+    }
     db.exampleapp.insert_one(doc)  # insert a new document
 
     return redirect(
@@ -138,13 +171,18 @@ def edit_post(mongoid):
     Parameters:
     mongoid (str): The MongoDB ObjectId of the record to be edited.
     """
-    name = request.form["fname"]
-    message = request.form["fmessage"]
+    product_type = request.form["product_type"]
+    description = request.form["product_description"]
+    price = request.form["product_price"]
+    id = request.form["user_id"]
+    email = request.form['user_email']
 
     doc = {
-        # "_id": ObjectId(mongoid),
-        "name": name,
-        "message": message,
+        "type": product_type,
+        "description": description,
+        "price": price,
+        "id": id,
+        "email": email,
         "created_at": datetime.datetime.utcnow(),
     }
 
@@ -154,7 +192,7 @@ def edit_post(mongoid):
 
     return redirect(
         url_for("read")
-    )  # tell the browser to make a request for the /read route
+    ) 
 
 
 @app.route("/delete/<mongoid>")
@@ -170,6 +208,10 @@ def delete(mongoid):
     return redirect(
         url_for("read")
     )  # tell the web browser to make a request for the /read route.
+
+# Flask app
+
+
 
 
 @app.route("/webhook", methods=["POST"])

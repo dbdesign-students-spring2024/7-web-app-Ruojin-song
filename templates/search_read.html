@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
-<h2>BUY WAHT YOU WANT HERE!</h2>
-<p>This page shows a list of second-hand items available for purchase. Find what you want and contact the user!
+<h2>Products with Type: {{ product_type }}</h2>
         
     {% for doc in docs %}
     <div>
@@ -14,9 +13,6 @@
             Seller ID: {{ doc.id }} <br/>
             Seller Email: {{ doc.email }} <br/>
             Posted at: {{ doc.created_at.strftime("%H:%M on %d %B %Y") }} <br/>
-            <br/>
-            <a href="{{ url_for('edit',mongoid=doc._id)}}">Edit</a> | <a href="{{ url_for('delete',mongoid=doc._id)}}">Delete</a>
-            <br/>
         </p>
         <p>
             {{ doc.message }}

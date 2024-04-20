@@ -1,12 +1,13 @@
-{% extends 'base.html' %} {% block container %}
+{% extends 'base.html' %} 
+{% block container %}
 <h2>Sell</h2>
 <p>Sell your second-hand product!</p>
 <form method="POST" action="{{ url_for('create_post') }}">
-  <p>Your Product: <input type="text" id="fname" name="fname" /><br /></p>
-  <p>
-    Description of product:
-    <textarea type="text" id="fmessage" name="fmessage"></textarea>
-  </p>
+  <p>Product Type: <input type="text" id="product_type" name="product_type" /><br /></p>
+  <p>Description of product: <textarea id="product_description" name="product_description"></textarea></p>
+  <p>Price of product: <input type="text" id="product_price" name="product_price" /></p>
+  <p>User id: <input type="text" id="user_id" name="user_id" /><br /></p>
+  <p>User Email: <input type="text" id="user_email" name="user_email" /><br /></p>
   <p>
     <a href="{{ url_for('read')}}">Cancel</a>
     <input type="submit" name="post-btn" value="Post" />
