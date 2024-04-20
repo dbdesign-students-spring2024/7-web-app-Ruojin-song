@@ -8,11 +8,13 @@ import re
 
 from flask import Flask, render_template, request, redirect, url_for, make_response
 
+
+
 # import logging
-import sentry_sdk
-from sentry_sdk.integrations.flask import (
-    FlaskIntegration,
-)  # delete this if not using sentry.io
+# import sentry_sdk
+# from sentry_sdk.integrations.flask import (
+   # FlaskIntegration,
+#)  # delete this if not using sentry.io
 
 # from markupsafe import escape
 import pymongo
@@ -41,6 +43,7 @@ from bson.objectid import ObjectId
 
 # instantiate the app using sentry for debugging
 app = Flask(__name__)
+
 # # turn on debugging if in development mode
 # app.debug = True if os.getenv("FLASK_ENV", "development") == "development" else False
 
@@ -101,14 +104,10 @@ def search_post():
     Route for POST requests to search for products by type.
     Accepts the form submission data for a product type and retrieves all products with the same type from the database.
     """
-    product_type = request.form["product_type"]
-
-    # Convert product_type to case-insensitive regular expression pattern
-    regex_pattern = re.compile(f"^{re.escape(product_type)}$", re.IGNORECASE)
-
+    product_id = request.form["product_id"]
     # Query database for products with the same type (case-insensitive)
-    docs = db.exampleapp.find({"type": {"$regex": regex_pattern}})
-    return render_template("search_read.html", docs=docs, product_type=product_type)
+    docs = db.exampleapp.find({"id": product_id})
+    return render_template("search_read.html", docs=docs, product_id=product_id)
 
 @app.route("/create")
 def create():
@@ -125,19 +124,18 @@ def create_post():
     Route for POST requests to the create page.
     Accepts the form submission data for a new document and saves the document to the database.
     """
+    id = request.form["product_id"]
     product_type = request.form["product_type"]
     description = request.form["product_description"]
     price = request.form["product_price"]
-    id = request.form["user_id"]
-    email = request.form['user_email']
+    
 
     # Create a new document with the data the user entered
     doc = {
+        "id": id,
         "type": product_type,
         "description": description,
         "price": price,
-        "id": id,
-        "email": email,
         "created_at": datetime.datetime.utcnow(),
     }
     db.exampleapp.insert_one(doc)  # insert a new document
@@ -171,18 +169,16 @@ def edit_post(mongoid):
     Parameters:
     mongoid (str): The MongoDB ObjectId of the record to be edited.
     """
+    id = request.form["product_id"]
     product_type = request.form["product_type"]
     description = request.form["product_description"]
     price = request.form["product_price"]
-    id = request.form["user_id"]
-    email = request.form['user_email']
 
     doc = {
+        "id": id,
         "type": product_type,
         "description": description,
         "price": price,
-        "id": id,
-        "email": email,
         "created_at": datetime.datetime.utcnow(),
     }
 

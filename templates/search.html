@@ -3,7 +3,7 @@
 <h2>Search</h2>
 <p>Search your second-hand product!</p>
 <form method="POST" action="{{ url_for('search') }}">
-  <p>Enter Product Type: <input type="text" id="product_type" name="product_type" /><br /></p>
+  <p>Enter Product Type: <input type="text" id="product_id" name="product_id" /><br /></p>
   <p>
     <a href="{{ url_for('read')}}">Cancel</a>
     <input type="submit" name="post-btn" value="Search" />

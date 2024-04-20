@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
 
 {% block container %}
-<h2>Products with Type: {{ product_type }}</h2>
+<h2>Products with id: {{ product_id }}</h2>
         
     {% for doc in docs %}
     <div>
         <hr class="solid">
         <p class="post">
+            Product ID: {{ doc.id }} <br/>
             Product Type: {{ doc.type }} <br/>
             Description: {{ doc.description }} <br/>
             Price: {{ doc.price }} <br/>
-            Seller ID: {{ doc.id }} <br/>
-            Seller Email: {{ doc.email }} <br/>
             Posted at: {{ doc.created_at.strftime("%H:%M on %d %B %Y") }} <br/>
         </p>
         <p>

@@ -2,11 +2,11 @@
 
 {% block container %}
 <h2>Welcome!</h2>
-<p>Welcome to Xianyu Market. In this market, you can READ or POST information about second-hand products. 
+<p>Welcome to Supermarket Information Management App. In this app, you can READ or CREATE information about products. 
     <ul>
-        <li><a href="{{ url_for('read')}}">Start shopping now！</a></li>
-        <li><a href="{{ url_for('create')}}">I also want to sell my second-hand items！</a></li>
-        <li><a href="{{ url_for('search')}}">Search for Products by Type. </a></li>
+        <li><a href="{{ url_for('read')}}">Read info about product</a></li>
+        <li><a href="{{ url_for('create')}}">Create info about product</a></li>
+        <li><a href="{{ url_for('search')}}">Search product by ID. </a></li>
     </ul>
 </p>
 {% endblock %}
